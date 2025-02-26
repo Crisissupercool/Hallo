@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: counter-frontend
+  labels:
+    app: counter-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: counter-frontend
+  template:
+    metadata:
+      labels:
+        app: counter-frontend
+    spec:
+      containers:
+        - name: counter-frontend
+          image: ghcr.io/crisissupercool/counter-frontend:v1
+          env:
+            - name: npm_config_cache
+              value: ./.npm-cache
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: BACKEND_URL
+              value: "https://counter-backend-254217-crimar.apps.exoscale-ch-gva-2-0.appuio.cloud"
+          ports:
+            - containerPort: 3000
